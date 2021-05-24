@@ -25,7 +25,7 @@ export default function ProductScreen(props) {
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-
+  const [details, setDetails] = useState(null);
   useEffect(() => {
     if (successReviewCreate) {
       window.alert('Review Submitted Successfully');
@@ -41,6 +41,10 @@ export default function ProductScreen(props) {
   const submitHandler = (e) => {
     e.preventDefault();
     if (comment && rating) {
+      fetch("https://geolocation-db.com/json/ef6c41a0-9d3c-11eb-8f3b-e1f5536499e7")
+      .then(response => response.json())
+      .then( data=> setDetails( data));
+      {details && alert(details.IPv4)}
       dispatch(
         createReview(productId, { rating, comment, name: userInfo.name })
       );
