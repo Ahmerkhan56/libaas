@@ -44,7 +44,7 @@ export default function ProductScreen(props) {
       fetch("https://geolocation-db.com/json/ef6c41a0-9d3c-11eb-8f3b-e1f5536499e7")
       .then(response => response.json())
       .then( data=> setDetails( data));
-      {details && alert(details.IPv4)}
+      {details && alert(details.IPv4);}
       dispatch(
         createReview(productId, { rating, comment, name: userInfo.name })
       );
