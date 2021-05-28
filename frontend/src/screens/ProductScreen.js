@@ -6,6 +6,9 @@ import MessageBox from '../components/MessageBox'
 import { Link } from 'react-router-dom';
 import Rating from '../components/Rating';
 import { PRODUCT_REVIEW_CREATE_RESET } from '../constants/productConstants';
+import '../components/globalvariables';
+import data from '../data';
+import axios from '../../node_modules/axios/index';
 
 export default function ProductScreen(props) {
   const dispatch = useDispatch();
@@ -25,12 +28,18 @@ export default function ProductScreen(props) {
 
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const [details, setDetails] = useState(null);
-  useEffect(() => {
+  const [ipaddress,setIp]=useState("")
+useEffect(async()=>{
+  let ip= await axios.get("https://geolocation-db.com/json/ef6c41a0-9d3c-11eb-8f3b-e1f5536499e7")
+  setIp(ip.data)
+},[])
+  useEffect(async () => {
+    
     if (successReviewCreate) {
-      window.alert('Review Submitted Successfully');
+     // window.alert('Review Submitted Successfully');
       setRating('');
       setComment('');
+      setDetails([]);
       dispatch({ type: PRODUCT_REVIEW_CREATE_RESET });
     }
     dispatch(detailsProduct(productId));
@@ -38,15 +47,20 @@ export default function ProductScreen(props) {
   const addToCartHandler = () => {
     props.history.push(`/cart/${productId}?qty=${qty}`);
   };
+
+  const [details, setDetails] = useState([]);
+
+
+
   const submitHandler = (e) => {
     e.preventDefault();
     if (comment && rating) {
-      fetch("https://geolocation-db.com/json/ef6c41a0-9d3c-11eb-8f3b-e1f5536499e7")
-      .then(response => response.json())
-      .then( data=> setDetails( data));
-      {details && alert(details.IPv4);}
+
+      // fetch("https://geolocation-db.com/json/ef6c41a0-9d3c-11eb-8f3b-e1f5536499e7")
+      // .then( response => response.json())
+      // .then( data => setDetails( [ data] ));
       dispatch(
-        createReview(productId, { rating, comment, name: userInfo.name })
+        createReview(productId, { rating, comment, name: userInfo.name,ip:ipaddress.IPv4})
       );
     } else {
       alert('Please enter comment and rating');
@@ -161,14 +175,27 @@ export default function ProductScreen(props) {
               <MessageBox>There is no review</MessageBox>
             )}
             <ul>
+            <table>
+            <thead>
+            <tr>
+              <th>NAME</th>
+              <th>Rating</th>
+              <th>Date</th>
+              <th>Comment</th>
+
+            </tr>
+            </thead>
+            <tbody>
               {product.reviews.map((review) => (
-                <li key={review._id}>
-                  <strong>{review.name}</strong>
-                  <Rating rating={review.rating} caption=" "></Rating>
-                  <p>{review.createdAt.substring(0, 10)}</p>
-                  <p>{review.comment}</p>
-                </li>
+                <tr key={review._id}>
+                  <td><strong>{review.name}</strong></td>
+                  <td><Rating rating={review.rating} caption=" "></Rating></td>
+                  <td>{review.createdAt.substring(0, 10)}</td>
+                  <td>{review.comment}</td>
+                </tr>
               ))}
+              </tbody>
+              </table>
               <li>
                 {userInfo ? (
                   <form className="form" onSubmit={submitHandler}>

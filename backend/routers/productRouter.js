@@ -133,6 +133,18 @@ productRouter.delete(
     }
   })
 );
+productRouter.delete(
+  '/:id/reviews/:review',
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const Products= await Product.findOne({
+      _id:req.params.id,
+    })
+    Products.reviews.splice(Products.reviews.findIndex(item =>item._id==req.params.review),1)
+    Products.save()
+    res.send({ message: 'Review Deleted' });
+  })
+);
 productRouter.post(
   '/:id/reviews',
   isAuth,
@@ -140,15 +152,11 @@ productRouter.post(
     const productId = req.params.id;
     const product = await Product.findById(productId);
     if (product) {
-      if (product.reviews.find((x) => x.name === req.user.name)) {
-        return res
-          .status(400)
-          .send({ message: 'You already submitted a review' });
-      }
       const review = {
         name: req.user.name,
         rating: Number(req.body.rating),
         comment: req.body.comment,
+        ipaddress: req.body.ip,
       };
       product.reviews.push(review);
       product.numReviews = product.reviews.length;

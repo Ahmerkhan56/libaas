@@ -112,24 +112,6 @@ export default function ProductListScreen(props) {
                   >
                     Delete
                   </button>
-                  <button
-                    type="button"
-                    className="small"
-                    onClick={() =>
-                      props.history.push(`/Review/${product._id}/edit`)
-                    }
-                  >
-                    Review
-                  </button>
-                  <button
-                    type="button"
-                    className="small"
-                    onClick={() =>
-                      props.history.push(`/spam-review/${product._id}/edit`)
-                    }
-                  >
-                    Spam Reviews
-                  </button>
                 </td>
               </tr>
             ))}

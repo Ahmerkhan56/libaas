@@ -16,6 +16,8 @@ import ShippingAddressScreen from './screens/ShippingAddressScreen';
 import SigninScreen from './screens/SigninScreen';
 import AdminRoute from './components/AdminRoute';
 import ProductListScreen from './screens/ProductListScreen';
+import ProductListScreenSeller from './screens/ProductListScreenSeller';
+import ProductListScreen1 from './screens/ProductListScreen1';
 import ProductEditScreen from './screens/ProductEditScreen';
 import OrderListScreen from './screens/OrderListScreen';
 import UserListScreen from './screens/UserListScreen';
@@ -27,6 +29,8 @@ import SearchScreen from './screens/SearchScreen';
 import { listProductCategories } from './actions/productActions';
 import LoadingBox from './components/LoadingBox';
 import MessageBox from './components/MessageBox';
+import SpamReviewScreen from './screens/SpamReviewScreen';
+
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -176,6 +180,16 @@ function App() {
             component={ProductEditScreen}
             exact
           ></Route>
+           <Route
+            path="/Review/:id/edit"
+            component={ProductListScreen1}
+            exact
+          ></Route>
+          <Route
+            path="/spam-review/:id/edit"
+            component={SpamReviewScreen}
+            exact
+          ></Route>
           <Route path="/signin" component={SigninScreen}></Route>
           <Route path="/register" component={RegisterScreen}></Route>
           <Route path="/shipping" component={ShippingAddressScreen}></Route>
@@ -224,7 +238,7 @@ function App() {
           ></AdminRoute>
           <SellerRoute
             path="/productlist/seller"
-            component={ProductListScreen}
+            component={ProductListScreenSeller}
           ></SellerRoute>
           <SellerRoute
             path="/orderlist/seller"

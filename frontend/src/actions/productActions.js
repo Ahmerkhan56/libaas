@@ -21,7 +21,9 @@ import {
   PRODUCT_REVIEW_CREATE_REQUEST,
   PRODUCT_REVIEW_CREATE_SUCCESS,
   PRODUCT_REVIEW_CREATE_FAIL,
-  
+  PRODUCT_REVIEW_DELETE_REQUEST,
+  PRODUCT_REVIEW_DELETE_SUCCESS,
+  PRODUCT_REVIEW_DELETE_FAIL,
 } from '../constants/productConstants';
 
 export const listProducts = ({
@@ -132,7 +134,26 @@ export const detailsProduct = (productId) => async (dispatch) => {
             : error.message;
         dispatch({ type: PRODUCT_DELETE_FAIL, payload: message });
       }
-    };
+  };
+  export const deleteReview = (productId, reviewId) => async (dispatch, getState) => {
+    dispatch({ type: PRODUCT_REVIEW_DELETE_REQUEST, payload: productId, payload:reviewId });
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    try {
+      const { data } = Axios.delete(`/api/products/${productId}/reviews/${reviewId}`, {
+          headers: { Authorization: `Bearer ${userInfo.token}` },
+        }
+      );
+      dispatch({ type: PRODUCT_REVIEW_DELETE_SUCCESS }); 
+    } catch (error) {
+        const message =
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message;
+        dispatch({ type: PRODUCT_REVIEW_DELETE_FAIL, payload: message });
+      }
+  };
     export const createReview = (productId, review) => async (
       dispatch,
       getState
